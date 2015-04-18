@@ -64,7 +64,9 @@ namespace hokuyo
 
 		const	size_t&		get_frame_count();				///< returns the number of recieved frames
 		const	size_t&		get_missed_count();				///< returns the number of incomplete/faulty frames
-		
+		float				get_max_range();
+		float				get_min_range();
+
 		void				start();						///< starts server communication process
 		void				stop();							///< ends server communication process
 		void 				request();						///< request a new aquisition

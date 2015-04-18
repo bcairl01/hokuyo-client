@@ -12,6 +12,8 @@ namespace hokuyo
 	#define		HOKUYO_END_SERVICE 			(0xF)
 	#define 	HOKUYO_ANGLE_SHIFT			(2.268928027)
 	#define 	HOKUYO_FRAME_SIZE 			(628UL)
+	#define 	HOKUYO_MAX_RANGE 			5.600f //meters
+	#define 	HOKUYO_MIN_RANGE 			0.020f //meters
 
 	#if HOKUYO_DEBUG
 	#define 	HOKUYO_MESSAGE(msg)			std::cout << "HOKUYO  :  " << msg << std::endl
@@ -19,6 +21,9 @@ namespace hokuyo
 	#define 	HOKUYO_MESSAGE(msg)
 	#endif
 
+
+	float tcp_client::get_max_range() {return HOKUYO_MAX_RANGE;}
+	float tcp_client::get_min_range() {return HOKUYO_MIN_RANGE;}
 
 	std::ostream& operator<<( std::ostream& os, tcp_client& cli)
 	{	
@@ -124,9 +129,12 @@ namespace hokuyo
 						if(jdx==8)
 						{
 							jdx = 0UL;
-							cli->data[item].push_back(
-								f_share_b.fpn - HOKUYO_ANGLE_SHIFT		/// [0,240] -> [-120,-120]
-							);
+
+							// When we are talking "angles" shift them
+							if(item==0UL)
+								cli->data[item].push_back(f_share_b.fpn - HOKUYO_ANGLE_SHIFT);
+							else//you were shifting the range data ya dumby
+								cli->data[item].push_back(f_share_b.fpn);
 						}
 					}
 				}
